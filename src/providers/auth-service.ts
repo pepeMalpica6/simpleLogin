@@ -24,12 +24,11 @@ export class AuthService {
     this.http = http;
   }
 
-    sendData(email: String, psw: String){
+  sendData(email: String, psw: String){
     let body = this.jsonToURLEncoded({ email: email, password: psw });
     let url = 'http://frontfree.localhost/api/app/guest/login';
     let headers = new Headers({ 'Content-Type': 'application/x-www-form-urlencoded' });
     let options = new RequestOptions({ headers: headers });
-        
     if (this.data) {
       return Promise.resolve(this.data);
     }
@@ -52,11 +51,6 @@ export class AuthService {
       return 'Customer[' + encodeURIComponent(key) + ']=' + encodeURIComponent(jsonString[key]);
     }).join('&');
   }
-
-
-
-
-
 
   public login(credentials) {
     //credentials.email = "fabiano.villanua@yopmail.com";
@@ -115,10 +109,22 @@ export class AuthService {
   }
 
   public logout() {
+    return new Promise(resolve => {
+      this.http.get('http://frontfree.localhost/api/app/customer/logout')
+        .map(res => res.json())
+        .subscribe(data => {
+          this.data = data;
+          resolve(this.data);
+        });
+    });
+
+    /*
     return Observable.create(observer => {
       this.currentUser = null;
+      this.http.get('http://frontfree.localhost/api/app/customer/logout');
       observer.next(true);
       observer.complete();
     });
+    */
   }
 }

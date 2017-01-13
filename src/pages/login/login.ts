@@ -14,6 +14,7 @@ import { Storage } from '@ionic/storage';
 })
 export class LoginPage {
   loading: Loading;
+  customer: any;
   registerCredentials = {email: '', password: ''};
  
   constructor(public storage: Storage, private nav: NavController, private auth: AuthService, private alertCtrl: AlertController, private loadingCtrl: LoadingController) {}
@@ -24,17 +25,30 @@ export class LoginPage {
  
   public login() {
     this.storage.clear(); 
+    
     this.showLoading()
     this.auth.sendData(this.registerCredentials.email,this.registerCredentials.password )
     .then(data => {
-      console.log(data);
+      console.log(data.ok);
       if (data.ok) {
+        this.customer = data;
+        console.log(this.customer.data.Customer);
+        this.storage.set('Customer_id',this.customer.data.Customer._id);
+        this.storage.set('Customer_birthday',this.customer.data.Customer.birthday);
+        this.storage.set('Customer_email',this.customer.data.Customer.email);
+        this.storage.set('Customer_gender',this.customer.data.Customer.gender);
+        this.storage.set('Customer_name',this.customer.data.Customer.name);
+        this.storage.set('Customer_newsletter',this.customer.data.Customer.newsletter);
+        this.storage.set('Customer_nickname',this.customer.data.Customer.nickname);
+        this.storage.set('Customer_phone',this.customer.data.Customer.phone);
+        this.storage.set('Customer_photo_circle',this.customer.data.Customer.photo_circle);
+        this.storage.set('Customer_photo_thumbnail',this.customer.data.Customer.photo_thumbnail);
+        this.storage.set('Customer_birthday',this.customer.data.Customer.birthday);
+        this.storage.get('Customer_email').then((val) => {
+          console.log('> Customer e-mail is: ', val);
+        })
         setTimeout(() => {
         this.loading.dismiss();
-        this.storage.set('name','pepe');
-        this.storage.get('name').then((val) => {
-          console.log('> Your name is', val);
-        })
         this.nav.setRoot(HomePage)
         });
       } else {

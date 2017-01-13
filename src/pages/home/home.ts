@@ -23,7 +23,7 @@ export class HomePage {
   }
  
   public logout() {
-    this.auth.logout().subscribe(succ => {
+    this.auth.logout().then(data => {
         this.nav.setRoot(LoginPage)
     });
   }
